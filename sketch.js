@@ -18,6 +18,7 @@ const setup = function () {
     word: getTheWord(words),
     userInput: "",
     result: null,
+    isSubmitted: false,
   };
 
   game.scrambledWord = scrambleTheWord(game.word);
@@ -54,21 +55,27 @@ const isInputCorrect = function (game) {
 };
 
 
-const displayResult = function (result) {
-  if (result) {
+const displayResult = function (game) {
+  if (game.result) {
     r.DrawText("CORRECT!", 100, 300, 40, r.GREEN);
   }
   else {
-    r.DrawText("Wrong!", 100, 300, 40, r.RED);
+    game.resut = null;
+    r.DrawText("Wrong! Try Again", 100, 300, 40, r.RED);
   }
 };
 
 const takeUserInput = function (game) {
   let char = r.GetCharPressed();
 
+  if (r.IsKeyPressed(r.KEY_BACKSPACE)) {
+    game.userInput = game.userInput.slice(0, game.userInput.length - 1);
+  }
+
   while (char !== 0) {
     game.userInput += String.fromCharCode(char);
     char = r.GetCharPressed();
+
   }
 
 };
@@ -76,23 +83,28 @@ const takeUserInput = function (game) {
 const update = function (game) {
 
   if (r.IsKeyPressed(r.KEY_ENTER)) {
+    game.isSubmitted = true;
     game.result = isInputCorrect(game);
     return;
   }
-  takeUserInput(game);
+
+  if (game.result !== true) {
+    takeUserInput(game);
+  }
 
 };
 
 const draw = function (world) {
-  const { game: { scrambledWord, userInput, result } } = world;
+  const { game: { scrambledWord, userInput, result, isSubmitted } } = world;
+
   r.BeginDrawing();
   r.ClearBackground(r.WHITE);
 
   r.DrawText(`${scrambledWord}`, 100, 100, 40, r.BLUE);
   r.DrawText(`${userInput}`, 100, 200, 40, r.BLACK);
 
-  if (result !== null) {
-    displayResult(result);
+  if (isSubmitted) {
+    displayResult(world.game);
   }
 
   r.EndDrawing();
