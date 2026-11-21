@@ -12,9 +12,14 @@ const setup = function () {
   r.InitWindow(screen.width, screen.height, "Word Scramble Game");
   r.SetTargetFPS(screen.fps);
 
-  const words = ["jump", "super", "salty"];
+  const words = ["jump", "super", "salty", "cat", "random"];
+  const game = {
+    word: getTheWord(words),
+    userInput: "",
+  };
+  game.scrambledWord = scrambleTheWord(game.word);
 
-  return { screen, words };
+  return { screen, words, game };
 };
 
 const update = function (world) {
@@ -22,7 +27,7 @@ const update = function (world) {
 
 const getTheWord = function (words) {
   const index = Math.floor(Math.random() * words.length);
-  const word = words[index].toLowerCase();
+  const word = words[index].toUpperCase();
 
   return word;
 };
@@ -39,15 +44,27 @@ const scrambleTheWord = function (word) {
     letters[i] = temp;
   }
 
-  return letters;
+  return letters.join("");
+};
+
+const takeUserInput = function (game) {
+  const char = r.GetKeyPressed();
+
+  if (r.IsKeyPressed(r.KEY_ENTER)) return;
+
+  if (char >= r.KEY_A && char <= r.KEY_Z) {
+    game.userInput += String.fromCharCode(char);
+  }
+
+
 };
 
 const draw = function (world) {
   r.BeginDrawing();
   r.ClearBackground(r.WHITE);
 
-  const word = getTheWord(world.words);
-  console.log(scrambleTheWord(word));
+  takeUserInput(world.game);
+  r.DrawText(`${world.game.userInput}`, 100, 100, 40, r.BLACK);
 
   // const key = r.GetKeyPressed();
   // console.log(String.fromCharCode(key));
