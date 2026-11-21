@@ -17,12 +17,14 @@ const setup = function () {
     word: getTheWord(words),
     userInput: "",
   };
+
   game.scrambledWord = scrambleTheWord(game.word);
 
   return { screen, words, game };
 };
 
 const update = function (world) {
+  takeUserInput(world.game);
 };
 
 const getTheWord = function (words) {
@@ -63,7 +65,7 @@ const draw = function (world) {
   r.BeginDrawing();
   r.ClearBackground(r.WHITE);
 
-  takeUserInput(world.game);
+
   r.DrawText(`${world.game.userInput}`, 100, 100, 40, r.BLACK);
 
   // const key = r.GetKeyPressed();
