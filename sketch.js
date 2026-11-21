@@ -18,7 +18,6 @@ const setup = function () {
     word: getTheWord(words),
     userInput: "",
     result: null,
-    isSubmitted: false,
   };
 
   game.scrambledWord = scrambleTheWord(game.word);
@@ -82,7 +81,6 @@ const takeUserInput = function (game) {
 const update = function (game) {
 
   if (r.IsKeyPressed(r.KEY_ENTER)) {
-    game.isSubmitted = true;
     game.result = isInputCorrect(game);
     return;
   }
