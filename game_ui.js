@@ -11,7 +11,7 @@ const displayResult = function (result) {
 };
 
 const drawUI = function (game) {
-  const { scrambledWord, userInput, result } = game;
+  const { scrambledWord, userInput, result, attempts } = game;
   const scrambledWidth = r.MeasureText(scrambledWord, 30);
   const scrambledX = (800 - scrambledWidth) / 2;
   const inputWidth = r.MeasureText(userInput, 20);
@@ -23,6 +23,9 @@ const drawUI = function (game) {
 
   // Instruction
   r.DrawText("Unscramble the word!", 300, 105, 18, r.WHITE);
+
+  //Attempts
+  r.DrawText(`Attempts: ${attempts}`, 345, 330, 18, r.WHITE);
 
   // Scrambled word
   r.DrawRectangle(250, 135, 300, 55, r.DARKGREEN);
