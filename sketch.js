@@ -5,7 +5,7 @@ const setup = function () {
   const screen = {
     width: 500,
     height: 500,
-    fps: 3,
+    fps: 50,
   };
 
   r.SetTraceLogLevel(r.LOG_NONE);
@@ -13,9 +13,11 @@ const setup = function () {
   r.SetTargetFPS(screen.fps);
 
   const words = ["jump", "super", "salty", "cat", "random"];
+
   const game = {
     word: getTheWord(words),
     userInput: "",
+    result: null,
   };
 
   game.scrambledWord = scrambleTheWord(game.word);
@@ -23,13 +25,10 @@ const setup = function () {
   return { screen, words, game };
 };
 
-const update = function (world) {
-  takeUserInput(world.game);
-};
 
 const getTheWord = function (words) {
   const index = Math.floor(Math.random() * words.length);
-  const word = words[index].toUpperCase();
+  const word = words[index].toLowerCase();
 
   return word;
 };
@@ -49,15 +48,37 @@ const scrambleTheWord = function (word) {
   return letters.join("");
 };
 
+const isInputCorrect = function (game) {
+  return game.word === game.userInput.toLowerCase();
+};
+
+
+const displayResult = function (result) {
+  if (result) {
+    r.DrawText("CORRECT!", 100, 300, 40, r.GREEN);
+  }
+  else {
+    r.DrawText("Wrong!", 100, 300, 40, r.RED);
+  }
+};
+
 const takeUserInput = function (game) {
-  const char = r.GetKeyPressed();
+  let char = r.GetCharPressed();
 
-  if (r.IsKeyPressed(r.KEY_ENTER)) return;
-
-  if (char >= r.KEY_A && char <= r.KEY_Z) {
+  while (char !== 0) {
     game.userInput += String.fromCharCode(char);
+    char = r.GetCharPressed();
   }
 
+};
+
+const update = function (world) {
+
+  if (r.IsKeyPressed(r.KEY_ENTER)) {
+    world.game.result = isInputCorrect(world.game);
+    return;
+  }
+  takeUserInput(world.game);
 
 };
 
@@ -65,11 +86,13 @@ const draw = function (world) {
   r.BeginDrawing();
   r.ClearBackground(r.WHITE);
 
+  r.DrawText(`${world.game.scrambledWord}`, 100, 100, 40, r.BLUE);
+  r.DrawText(`${world.game.userInput}`, 100, 200, 40, r.BLACK);
 
-  r.DrawText(`${world.game.userInput}`, 100, 100, 40, r.BLACK);
+  if (world.game.result !== null) {
+    displayResult(world.game.result);
+  }
 
-  // const key = r.GetKeyPressed();
-  // console.log(String.fromCharCode(key));
   r.EndDrawing();
 
 };
