@@ -60,7 +60,6 @@ const displayResult = function (game) {
     r.DrawText("CORRECT!", 100, 300, 40, r.GREEN);
   }
   else {
-    game.result = null;
     r.DrawText("Wrong! Try Again", 100, 300, 40, r.RED);
   }
 };
@@ -95,7 +94,7 @@ const update = function (game) {
 };
 
 const draw = function (world) {
-  const { game: { scrambledWord, userInput, result, isSubmitted } } = world;
+  const { game: { scrambledWord, userInput, result } } = world;
 
   r.BeginDrawing();
   r.ClearBackground(r.WHITE);
@@ -103,7 +102,7 @@ const draw = function (world) {
   r.DrawText(`${scrambledWord}`, 100, 100, 40, r.BLUE);
   r.DrawText(`${userInput}`, 100, 200, 40, r.BLACK);
 
-  if (isSubmitted) {
+  if (result !== null) {
     displayResult(world.game);
   }
 
