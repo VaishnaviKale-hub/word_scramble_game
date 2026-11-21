@@ -1,5 +1,4 @@
 const r = require("raylib");
-const g = require("./geometry");
 
 const setup = function () {
   const screen = {
@@ -22,15 +21,13 @@ const setup = function () {
 
   game.scrambledWord = scrambleTheWord(game.word);
 
-  return { screen, words, game };
+  return { screen, game };
 };
 
 
 const getTheWord = function (words) {
   const index = Math.floor(Math.random() * words.length);
-  const word = words[index].toLowerCase();
-
-  return word;
+  return words[index].toLowerCase();
 };
 
 const scrambleTheWord = function (word) {
@@ -54,8 +51,8 @@ const isInputCorrect = function (game) {
 };
 
 
-const displayResult = function (game) {
-  if (game.result) {
+const displayResult = function (result) {
+  if (result) {
     r.DrawText("CORRECT!", 100, 300, 40, r.GREEN);
   }
   else {
@@ -63,17 +60,27 @@ const displayResult = function (game) {
   }
 };
 
+const reset = function (game) {
+  game.result = null;
+  game.userInput = "";
+};
+
 const takeUserInput = function (game) {
-  let char = r.GetCharPressed();
 
   if (r.IsKeyPressed(r.KEY_BACKSPACE)) {
-    game.userInput = game.userInput.slice(0, game.userInput.length - 1);
+    game.userInput = game.userInput.slice(0, -1);
+    return;
   }
+  if (r.IsKeyPressed(r.KEY_R)) {
+    reset(game);
+    return;
+  }
+
+  let char = r.GetCharPressed();
 
   while (char !== 0) {
     game.userInput += String.fromCharCode(char);
     char = r.GetCharPressed();
-
   }
 
 };
@@ -95,13 +102,18 @@ const draw = function (world) {
   const { game: { scrambledWord, userInput, result } } = world;
 
   r.BeginDrawing();
-  r.ClearBackground(r.WHITE);
+  r.ClearBackground({
+    r: 200,
+    g: 200,
+    b: 255,
+    a: 150,
+  });
 
   r.DrawText(`${scrambledWord}`, 100, 100, 40, r.BLUE);
   r.DrawText(`${userInput}`, 100, 200, 40, r.BLACK);
 
   if (result !== null) {
-    displayResult(world.game);
+    displayResult(result);
   }
 
   r.EndDrawing();
