@@ -60,7 +60,7 @@ const displayResult = function (game) {
     r.DrawText("CORRECT!", 100, 300, 40, r.GREEN);
   }
   else {
-    game.resut = null;
+    game.result = null;
     r.DrawText("Wrong! Try Again", 100, 300, 40, r.RED);
   }
 };
