@@ -1,5 +1,6 @@
 const r = require("raylib");
 const u = require("./game_ui");
+const w = require("./word_collection");
 
 const setup = function () {
   const screen = {
@@ -12,7 +13,7 @@ const setup = function () {
   r.InitWindow(screen.width, screen.height, "Word Scramble Game");
   r.SetTargetFPS(screen.fps);
 
-  const words = ["jump", "super", "salty", "cat", "random"];
+  const words = w.words;
   const game = {
     word: getTheWord(words),
     userInput: "",
