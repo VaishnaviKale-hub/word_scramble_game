@@ -49,7 +49,8 @@ const scrambleTheWord = function (word) {
 };
 
 const isInputCorrect = function (game) {
-  return game.word === game.userInput.toLowerCase();
+  const { word, userInput } = game;
+  return word === userInput.toLowerCase();
 };
 
 
@@ -72,25 +73,26 @@ const takeUserInput = function (game) {
 
 };
 
-const update = function (world) {
+const update = function (game) {
 
   if (r.IsKeyPressed(r.KEY_ENTER)) {
-    world.game.result = isInputCorrect(world.game);
+    game.result = isInputCorrect(game);
     return;
   }
-  takeUserInput(world.game);
+  takeUserInput(game);
 
 };
 
 const draw = function (world) {
+  const { game: { scrambledWord, userInput, result } } = world;
   r.BeginDrawing();
   r.ClearBackground(r.WHITE);
 
-  r.DrawText(`${world.game.scrambledWord}`, 100, 100, 40, r.BLUE);
-  r.DrawText(`${world.game.userInput}`, 100, 200, 40, r.BLACK);
+  r.DrawText(`${scrambledWord}`, 100, 100, 40, r.BLUE);
+  r.DrawText(`${userInput}`, 100, 200, 40, r.BLACK);
 
-  if (world.game.result !== null) {
-    displayResult(world.game.result);
+  if (result !== null) {
+    displayResult(result);
   }
 
   r.EndDrawing();
