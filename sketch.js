@@ -42,7 +42,6 @@ const scrambleTheWord = function (word) {
     letters[posA] = letters[i];
     letters[i] = temp;
   }
-
   return letters.join("");
 };
 
@@ -58,43 +57,50 @@ const resetAnswer = function (game) {
 
 const takeUserInput = function (game) {
   let char = r.GetCharPressed();
-
-  if (r.IsKeyPressed(r.KEY_BACKSPACE)) {
-    game.userInput = game.userInput.slice(0, -1);
-    return;
-  }
-  if (r.IsKeyPressed(r.KEY_SPACE)) {
-    resetAnswer(game);
-    return;
-  }
   while (char !== 0) {
     game.userInput += String.fromCharCode(char);
     char = r.GetCharPressed();
   }
 };
 
+const handleEnter = function (game) {
+  game.attempts++;
+  game.result = isAnswerCorrect(game);
+};
+
+const moveToNextWord = function (game, words) {
+  if (game.result === true) {
+    game.word = getRandomWord(words);
+    game.scrambledWord = scrambleTheWord(game.word);
+    game.attempts = 0;
+    resetAnswer(game);
+  }
+};
+
 const handleKeyboardInput = function (game, words) {
   if (r.IsKeyPressed(r.KEY_ENTER)) {
-    game.attempts++;
-    game.result = isAnswerCorrect(game);
+    handleEnter(game);
     return;
   }
 
-  if (r.IsKeyPressed(r.KEY_RIGHT) && game.result === true) {
+  if (r.IsKeyPressed(r.KEY_RIGHT)) {
     moveToNextWord(game, words);
+    return;
+  }
+
+  if (r.IsKeyPressed(r.KEY_BACKSPACE)) {
+    game.userInput = game.userInput.slice(0, -1);
+    return;
+  }
+
+  if (r.IsKeyPressed(r.KEY_SPACE)) {
+    resetAnswer(game);
+    return;
   }
 
   if (game.result !== true) {
     takeUserInput(game);
   }
-
-};
-
-const moveToNextWord = function (game, words) {
-  game.word = getRandomWord(words);
-  game.scrambledWord = scrambleTheWord(game.word);
-  game.attempts = 0;
-  resetAnswer(game);
 };
 
 const update = function (game, words) {
