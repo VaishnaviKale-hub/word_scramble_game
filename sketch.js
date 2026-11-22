@@ -15,7 +15,7 @@ const setup = function () {
 
   const words = w.words;
   const game = {
-    word: getTheWord(words),
+    word: getRandomWord(words),
     userInput: "",
     result: null,
     attempts: 0,
@@ -26,7 +26,7 @@ const setup = function () {
   return { screen, words, game };
 };
 
-const getTheWord = function (words) {
+const getRandomWord = function (words) {
   const index = Math.floor(Math.random() * words.length);
   return words[index].toUpperCase();
 };
@@ -46,12 +46,12 @@ const scrambleTheWord = function (word) {
   return letters.join("");
 };
 
-const isInputCorrect = function (game) {
+const isAnswerCorrect = function (game) {
   const { word, userInput } = game;
   return word === userInput.toUpperCase();
 };
 
-const reset = function (game) {
+const resetAnswer = function (game) {
   game.result = null;
   game.userInput = "";
 };
@@ -64,7 +64,7 @@ const takeUserInput = function (game) {
     return;
   }
   if (r.IsKeyPressed(r.KEY_SPACE)) {
-    reset(game);
+    resetAnswer(game);
     return;
   }
   while (char !== 0) {
@@ -73,32 +73,32 @@ const takeUserInput = function (game) {
   }
 };
 
-const handleUserInput = function (game, words) {
+const handleKeyboardInput = function (game, words) {
   if (r.IsKeyPressed(r.KEY_ENTER)) {
     game.attempts++;
-    game.result = isInputCorrect(game);
+    game.result = isAnswerCorrect(game);
     return;
   }
 
   if (r.IsKeyPressed(r.KEY_RIGHT) && game.result === true) {
-    nextWord(game, words);
+    moveToNextWord(game, words);
   }
 
   if (game.result !== true) {
     takeUserInput(game);
   }
 
-
 };
 
-const nextWord = function (game, words) {
-  game.word = getTheWord(words);
+const moveToNextWord = function (game, words) {
+  game.word = getRandomWord(words);
   game.scrambledWord = scrambleTheWord(game.word);
-  reset(game);
+  game.attempts = 0;
+  resetAnswer(game);
 };
 
 const update = function (game, words) {
-  handleUserInput(game, words);
+  handleKeyboardInput(game, words);
 };
 
 const draw = function (world) {
