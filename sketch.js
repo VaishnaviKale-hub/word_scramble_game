@@ -23,7 +23,7 @@ const setup = function () {
 
   game.scrambledWord = scrambleTheWord(game.word);
 
-  return { screen, game };
+  return { screen, words, game };
 };
 
 const getTheWord = function (words) {
@@ -71,18 +71,34 @@ const takeUserInput = function (game) {
     game.userInput += String.fromCharCode(char);
     char = r.GetCharPressed();
   }
-
 };
 
-const update = function (game) {
+const handleUserInput = function (game, words) {
   if (r.IsKeyPressed(r.KEY_ENTER)) {
     game.attempts++;
     game.result = isInputCorrect(game);
     return;
   }
+
+  if (r.IsKeyPressed(r.KEY_RIGHT) && game.result === true) {
+    nextWord(game, words);
+  }
+
   if (game.result !== true) {
     takeUserInput(game);
   }
+
+
+};
+
+const nextWord = function (game, words) {
+  game.word = getTheWord(words);
+  game.scrambledWord = scrambleTheWord(game.word);
+  reset(game);
+};
+
+const update = function (game, words) {
+  handleUserInput(game, words);
 };
 
 const draw = function (world) {
@@ -92,6 +108,7 @@ const draw = function (world) {
   r.ClearBackground(background);
   u.drawUI(world.game);
   r.EndDrawing();
+
 };
 
 const running = function () {

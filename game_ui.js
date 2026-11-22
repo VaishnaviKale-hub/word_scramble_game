@@ -12,6 +12,7 @@ const displayResult = function (result) {
 
 const drawUI = function (game) {
   const { scrambledWord, userInput, result, attempts } = game;
+
   const scrambledWidth = r.MeasureText(scrambledWord, 30);
   const scrambledX = (800 - scrambledWidth) / 2;
   const inputWidth = r.MeasureText(userInput, 20);
@@ -45,18 +46,20 @@ const drawUI = function (game) {
   }
 
   // Controls
-  r.DrawRectangle(150, 365, 500, 105, r.DARKGREEN);
-  r.DrawRectangleLines(150, 365, 500, 105, r.YELLOW);
+  r.DrawRectangle(100, 365, 600, 105, r.DARKGREEN);
+  r.DrawRectangleLines(100, 365, 600, 105, r.YELLOW);
 
   r.DrawText("CONTROLS", 350, 378, 18, r.YELLOW);
 
-  r.DrawText("BACKSPACE", 190, 418, 13, r.BLACK);
-  r.DrawText("ENTER", 360, 418, 13, r.BLACK);
-  r.DrawText("SPACE", 507, 418, 13, r.BLACK);
+  r.DrawText("BACKSPACE", 130, 418, 13, r.BLACK);
+  r.DrawText("ENTER", 300, 418, 13, r.BLACK);
+  r.DrawText("SPACE", 430, 418, 13, r.BLACK);
+  r.DrawText("RIGHT ARROW", 540, 418, 13, r.BLACK);
 
-  r.DrawText("Delete", 215, 445, 12, r.WHITE);
-  r.DrawText("Check", 370, 445, 12, r.WHITE);
-  r.DrawText("Retry", 515, 445, 12, r.WHITE);
+  r.DrawText("Delete", 155, 445, 12, r.WHITE);
+  r.DrawText("Check", 305, 445, 12, r.WHITE);
+  r.DrawText("Retry", 440, 445, 12, r.WHITE);
+  r.DrawText("Next Word", 550, 445, 12, r.WHITE);
 };
 
 module.exports = {

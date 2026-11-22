@@ -3,7 +3,7 @@ const sketch = require("./sketch");
 
 const loop = function (world) {
   while (sketch.running()) {
-    sketch.update(world.game);
+    sketch.update(world.game, world.words);
     sketch.draw(world);
   }
 };
