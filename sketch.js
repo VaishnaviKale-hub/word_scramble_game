@@ -42,6 +42,7 @@ const scrambleTheWord = function (word) {
     letters[posA] = letters[i];
     letters[i] = temp;
   }
+
   return letters.join("");
 };
 
@@ -57,6 +58,7 @@ const resetAnswer = function (game) {
 
 const takeUserInput = function (game) {
   let char = r.GetCharPressed();
+
   while (char !== 0) {
     game.userInput += String.fromCharCode(char);
     char = r.GetCharPressed();
@@ -68,13 +70,15 @@ const handleEnter = function (game) {
   game.result = isAnswerCorrect(game);
 };
 
+const shouldMoveToNextWord = function (game) {
+  return r.IsKeyPressed(r.KEY_RIGHT) && game.result === true;
+};
+
 const moveToNextWord = function (game, words) {
-  if (game.result === true) {
-    game.word = getRandomWord(words);
-    game.scrambledWord = scrambleTheWord(game.word);
-    game.attempts = 0;
-    resetAnswer(game);
-  }
+  game.word = getRandomWord(words);
+  game.scrambledWord = scrambleTheWord(game.word);
+  game.attempts = 0;
+  resetAnswer(game);
 };
 
 const handleKeyboardInput = function (game, words) {
@@ -83,7 +87,7 @@ const handleKeyboardInput = function (game, words) {
     return;
   }
 
-  if (r.IsKeyPressed(r.KEY_RIGHT)) {
+  if (shouldMoveToNextWord(game)) {
     moveToNextWord(game, words);
     return;
   }
