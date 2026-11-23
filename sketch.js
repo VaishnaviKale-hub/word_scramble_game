@@ -36,14 +36,11 @@ const scrambleTheWord = function (word) {
 
   for (let i = letters.length - 1; i > 0; i--) {
     const posA = Math.floor(Math.random() * (i + 1));
-    let temp;
 
-    temp = letters[posA];
-    letters[posA] = letters[i];
-    letters[i] = temp;
+    [letters[i], letters[posA]] = [letters[posA], letters[i]];
   }
 
-  return letters.join("");
+  return "".concat(...letters);
 };
 
 const isAnswerCorrect = function (game) {
@@ -56,7 +53,7 @@ const resetAnswer = function (game) {
   game.userInput = "";
 };
 
-const takeUserInput = function (game) {
+const readUserInput = function (game) {
   let char = r.GetCharPressed();
 
   while (char !== 0) {
@@ -66,7 +63,9 @@ const takeUserInput = function (game) {
 };
 
 const handleEnter = function (game) {
-  game.attempts++;
+  if (!game.result) {
+    game.attempts++;
+  }
   game.result = isAnswerCorrect(game);
 };
 
@@ -103,7 +102,7 @@ const handleKeyboardInput = function (game, words) {
   }
 
   if (game.result !== true) {
-    takeUserInput(game);
+    readUserInput(game);
   }
 };
 
