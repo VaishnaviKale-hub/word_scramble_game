@@ -35,12 +35,15 @@ const scrambleTheWord = function (word) {
   const letters = word.split("");
 
   for (let i = letters.length - 1; i > 0; i--) {
-    const posA = Math.floor(Math.random() * (i + 1));
+    const randomPos = Math.floor(Math.random() * (i + 1));
 
-    [letters[i], letters[posA]] = [letters[posA], letters[i]];
+    [letters[i], letters[randomPos]] = [letters[randomPos], letters[i]];
   }
 
-  return "".concat(...letters);
+  const scrambledWord = "".concat(...letters);
+
+  return scrambledWord != word ? scrambledWord : scrambleTheWord(word);
+
 };
 
 const isAnswerCorrect = function (game) {
@@ -115,7 +118,9 @@ const draw = function (world) {
 
   r.BeginDrawing();
   r.ClearBackground(background);
+
   u.drawUI(world.game);
+
   r.EndDrawing();
 
 };
@@ -135,3 +140,4 @@ module.exports = {
   draw,
   teardown,
 };
+
