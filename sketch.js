@@ -67,7 +67,10 @@ const readUserInput = function (game) {
 
 const handleEnter = function (game) {
   if (!game.result) {
-    game.attempts++;
+
+    if (game.userInput.length > 0) {
+      game.attempts++;
+    }
   }
   game.result = isAnswerCorrect(game);
 };
