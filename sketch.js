@@ -21,14 +21,35 @@ const setup = function () {
     attempts: 0,
   };
 
+  let shuffledWords = [];
+  let currentIndex = 0;
+
   game.scrambledWord = scrambleTheWord(game.word);
 
-  return { screen, words, game };
+  return { screen, words, game, shuffledWords, currentIndex };
 };
 
+let shuffledWords = [];
+let currentIndex = 0;
+
 const getRandomWord = function (words) {
-  const index = Math.floor(Math.random() * words.length);
-  return words[index].toUpperCase();
+
+  if (currentIndex >= shuffledWords.length) {
+
+    shuffledWords = [...words];
+
+    for (let i = shuffledWords.length - 1; i > 0; i--) {
+
+      const randomPos = Math.floor(Math.random() * (i + 1));
+
+      [shuffledWords[i], shuffledWords[randomPos]] =
+        [shuffledWords[randomPos], shuffledWords[i]];
+    }
+
+    currentIndex = 0;
+  }
+
+  return shuffledWords[currentIndex++].toUpperCase();
 };
 
 const scrambleTheWord = function (word) {
