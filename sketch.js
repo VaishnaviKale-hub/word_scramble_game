@@ -14,38 +14,42 @@ const setup = function () {
   r.SetTargetFPS(screen.fps);
 
   const words = w.words;
+
+  let shuffledWords = [];
+  let currentIndex = 0;
+
   const game = {
-    word: getRandomWord(words),
+    word: getRandomWord(words, { shuffledWords, currentIndex }),
     userInput: "",
     result: null,
     attempts: 0,
   };
 
-  let shuffledWords = [];
-  let currentIndex = 0;
 
   game.scrambledWord = scrambleTheWord(game.word);
 
   return { screen, words, game, shuffledWords, currentIndex };
 };
 
-let shuffledWords = [];
-let currentIndex = 0;
+const shuffleWords = function (words, shuffledWords) {
 
-const getRandomWord = function (words) {
+  shuffledWords = [...words];
+
+  for (let i = shuffledWords.length - 1; i > 0; i--) {
+
+    const randomPos = Math.floor(Math.random() * (i + 1));
+
+    [shuffledWords[i], shuffledWords[randomPos]] =
+      [shuffledWords[randomPos], shuffledWords[i]];
+  }
+  return shuffledWords;
+
+};
+
+const getRandomWord = function (words, { shuffledWords, currentIndex }) {
 
   if (currentIndex >= shuffledWords.length) {
-
-    shuffledWords = [...words];
-
-    for (let i = shuffledWords.length - 1; i > 0; i--) {
-
-      const randomPos = Math.floor(Math.random() * (i + 1));
-
-      [shuffledWords[i], shuffledWords[randomPos]] =
-        [shuffledWords[randomPos], shuffledWords[i]];
-    }
-
+    shuffledWords = shuffleWords(words, shuffledWords);
     currentIndex = 0;
   }
 
