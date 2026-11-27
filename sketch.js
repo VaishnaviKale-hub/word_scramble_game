@@ -15,41 +15,41 @@ const setup = function () {
 
   const words = w.words;
 
-  let shuffledWords = [];
-  let currentIndex = 0;
+  const shuffle = {
+    shuffledWords: [],
+    currentIndex: 0,
+  };
 
   const game = {
-    word: getRandomWord(words, { shuffledWords, currentIndex }),
+    word: getRandomWord(words, shuffle),
     userInput: "",
     result: null,
     attempts: 0,
   };
 
-
   game.scrambledWord = scrambleTheWord(game.word);
 
-  return { screen, words, game, shuffledWords, currentIndex };
+  return { screen, words, game, shuffle };
 };
 
-const shuffleWords = function (words, shuffledWords) {
+const shuffleWords = function (...words) {
 
-  shuffledWords = [...words];
-
-  for (let i = shuffledWords.length - 1; i > 0; i--) {
+  for (let i = words.length - 1; i > 0; i--) {
 
     const randomPos = Math.floor(Math.random() * (i + 1));
 
-    [shuffledWords[i], shuffledWords[randomPos]] =
-      [shuffledWords[randomPos], shuffledWords[i]];
+    [words[i], words[randomPos]] =
+      [words[randomPos], words[i]];
   }
-  return shuffledWords;
+
+  return words;
 
 };
 
 const getRandomWord = function (words, { shuffledWords, currentIndex }) {
 
   if (currentIndex >= shuffledWords.length) {
-    shuffledWords = shuffleWords(words, shuffledWords);
+    shuffledWords = shuffleWords(...words);
     currentIndex = 0;
   }
 
@@ -104,21 +104,21 @@ const shouldMoveToNextWord = function (game) {
   return r.IsKeyPressed(r.KEY_RIGHT) && game.result === true;
 };
 
-const moveToNextWord = function (game, words) {
-  game.word = getRandomWord(words);
+const moveToNextWord = function (game, words, shuffle) {
+  game.word = getRandomWord(words, shuffle);
   game.scrambledWord = scrambleTheWord(game.word);
   game.attempts = 0;
   resetAnswer(game);
 };
 
-const handleKeyboardInput = function (game, words) {
+const handleKeyboardInput = function (game, words, shuffle) {
   if (r.IsKeyPressed(r.KEY_ENTER)) {
     handleEnter(game);
     return;
   }
 
   if (shouldMoveToNextWord(game)) {
-    moveToNextWord(game, words);
+    moveToNextWord(game, words, shuffle);
     return;
   }
 
@@ -137,8 +137,8 @@ const handleKeyboardInput = function (game, words) {
   }
 };
 
-const update = function (game, words) {
-  handleKeyboardInput(game, words);
+const update = function (game, words, shuffle) {
+  handleKeyboardInput(game, words, shuffle);
 };
 
 const draw = function (world) {
