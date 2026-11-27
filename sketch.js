@@ -32,7 +32,7 @@ const setup = function () {
   return { screen, words, game, shuffle };
 };
 
-const shuffleWords = function (...words) {
+const shuffle = function (...words) {
 
   for (let i = words.length - 1; i > 0; i--) {
 
@@ -49,7 +49,7 @@ const shuffleWords = function (...words) {
 const getRandomWord = function (words, { shuffledWords, currentIndex }) {
 
   if (currentIndex >= shuffledWords.length) {
-    shuffledWords = shuffleWords(...words);
+    shuffledWords = shuffle(...words);
     currentIndex = 0;
   }
 
@@ -57,14 +57,7 @@ const getRandomWord = function (words, { shuffledWords, currentIndex }) {
 };
 
 const scrambleTheWord = function (word) {
-  const letters = word.split("");
-
-  for (let i = letters.length - 1; i > 0; i--) {
-    const randomPos = Math.floor(Math.random() * (i + 1));
-
-    [letters[i], letters[randomPos]] = [letters[randomPos], letters[i]];
-  }
-
+  const letters = shuffle(...word.split(""));
   const scrambledWord = "".concat(...letters);
 
   return scrambledWord != word ? scrambledWord : scrambleTheWord(word);
